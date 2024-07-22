@@ -644,3 +644,19 @@ output "alb_external_ip_address" {
 Группа безопасности:
 
 ![](screenshots/2024-07-22_130424_console.yandex.cloud.png)
+
+Балансировщик:
+
+![](screenshots/2024-07-22_131918_console.yandex.cloud.png)
+
+Роутер:
+
+![](screenshots/2024-07-22_132036_console.yandex.cloud.png)
+
+Группа бекэндов:
+
+![](screenshots/2024-07-22_132036_console.yandex.cloud.png)
+
+Целевая группа:
+
+![](screenshots/2024-07-22_132105_console.yandex.cloud.png)
