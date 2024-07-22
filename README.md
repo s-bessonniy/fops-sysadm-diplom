@@ -598,7 +598,11 @@ output "alb_external_ip_address" {
 ```
 
 После чего перехожу в папку с проектом:
+
 ```cd devops/vm_up```
+
 И запускаю последовательно команды:
+
 ```terraform plan```
+
 ```terraform apply```
