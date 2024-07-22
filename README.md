@@ -1804,5 +1804,204 @@ host_key_checking=False
 
 И с криками `ansible-playbook elk_conf.yml`, устанавливаем и настраивает елку икибану тоже:
 
-![]()
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_14_54_30.png)
+
+Далее по кричим `ansible-playbook web_conf.yml`, устанавливаем джинсы с настройками жижи2:
+
+Файл web_conf.yml:
+
+```yml
+---
+- name: Configure web server
+  hosts: internal_servers
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Update cache
+      apt:
+        update_cache: yes
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Copy index.html
+      copy:
+        src: templates/index.html
+        dest: /var/www/html/
+    
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+    
+    - name: copy filebeat
+      copy:
+        src: packages/{{ pkg_name }}
+        dest: /tmp/
+
+    - name: Install filebeat deb
+      apt:
+        deb: "/tmp/{{ pkg_name }}"
+        state: present
+
+    - name: Copy filebeat.yml
+      template:
+        src: templates/filebeat.yml.j2
+        mode: 0644
+        dest: /etc/filebeat/filebeat.yml
+    
+    - name: Configure nginx module
+      copy:
+        dest: /etc/filebeat/modules.d/nginx.yml.disabled
+        content: |
+          - module: nginx
+            # Access logs
+            access:
+              enabled: true
+
+            # Error logs
+            error:
+              enabled: true
+        mode: 0644
+     
+    - name: Enable system nginx module in filebeat
+      shell:
+        cmd:  filebeat setup --dashboards && filebeat modules enable system nginx
+        
+    - name: Reload systemd daemon
+      shell:
+        cmd: systemctl daemon-reload
+    
+    - name: restart Filebeat
+      systemd:
+        name: filebeat.service
+        state: restarted
+        enabled: true
+...
+```
+
+Файл nginx.conf.j2:
+
+```yml
+server {
+        listen          {{ listen_port }};
+        server_name     {{ server_name }};
+
+        root    /usr/share/zabbix;
+
+        index   index.php;
+
+        location = /favicon.ico {
+                log_not_found   off;
+        }
+
+        location / {
+                try_files       $uri $uri/ =404;
+        }
+
+        location /assets {
+                access_log      off;
+                expires         10d;
+        }
+
+        location ~ /\.ht {
+                deny            all;
+        }
+
+        location ~ /(api\/|conf[^\.]|include|locale) {
+                deny            all;
+                return          404;
+        }
+
+        location /vendor {
+                deny            all;
+                return          404;
+        }
+
+        location ~ [^/]\.php(/|$) {
+                fastcgi_pass    unix:/var/run/php/zabbix.sock;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_index   index.php;
+
+                fastcgi_param   DOCUMENT_ROOT   /usr/share/zabbix;
+                fastcgi_param   SCRIPT_FILENAME /usr/share/zabbix$fastcgi_script_name;
+                fastcgi_param   PATH_TRANSLATED /usr/share/zabbix$fastcgi_script_name;
+
+                include fastcgi_params;
+                fastcgi_param   QUERY_STRING    $query_string;
+                fastcgi_param   REQUEST_METHOD  $request_method;
+                fastcgi_param   CONTENT_TYPE    $content_type;
+                fastcgi_param   CONTENT_LENGTH  $content_length;
+
+                fastcgi_intercept_errors        on;
+                fastcgi_ignore_client_abort     off;
+                fastcgi_connect_timeout         60;
+                fastcgi_send_timeout            180;
+                fastcgi_read_timeout            180;
+                fastcgi_buffer_size             128k;
+                fastcgi_buffers                 4 256k;
+                fastcgi_busy_buffers_size       256k;
+                fastcgi_temp_file_write_size    256k;
+        }
+}
+```
+
+И файл index.html:
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курсовой проект FOPS-20</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #200861;
+        }
+       .card {
+            background-color: rgb(156, 137, 182);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        h1, p {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+   <div class="card">
+    <h1>Курсовой проект - Яремко Сергей</h1>
+    <div class="markdown-heading" dir="auto"><h3 class="heading-element" dir="auto">Что настроено и запущено в YandexCloud:</h3></div>
+    <ul dir="auto">
+        <li>Бастион Хост</li>
+        <li>Два Web сервера</li>
+        <li>Сервер с Zabbix</li>
+        <li>Сервер с Elacticsearch</li>
+        <li>Сервер с Kibana</li>
+        <li>Настроен балансировщик нагрузки</li>
+        <li>Создана Сеть и три подсети</li>
+        <li>Определена и настроена политика безопасности</li>
+
+    </ul>
+    <div class="markdown-heading" dir="auto"><h3 class="heading-element" dir="auto">Мои контакты:</h3>
+
+    <li>e-mail: s.insommnia@gmail.com</li></div>
+</div>
+</div>
+</body>
+</html>
+```
+
+В результате Дед Мороз не пришел, но что то произошло:
+
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_15_08_42.png)
 
