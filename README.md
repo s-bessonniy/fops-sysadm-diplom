@@ -102,7 +102,8 @@ Cоздайте ВМ, разверните на ней Elasticsearch. Устан
 
 ![](screenshots/22_123037_console.yandex.cloud.png)
 
-Но после создаия и запуска файла main.tf для terraform:
+Но после создания и запуска файла main.tf для terraform:
+
 Файл main.tf:
 
 ```HCL
