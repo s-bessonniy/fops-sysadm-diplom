@@ -3350,3 +3350,14 @@ StatsAllowedIP=127.0.0.1
 
 ![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_15_41_56.png)
 
+И так, что имеем в сухом остатке.
+
+Работа zabbix:
+
+Хосты:
+
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_16_41_38.png)
+
+Дашборт:
+
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_16_32_53.png)
