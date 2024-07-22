@@ -660,3 +660,65 @@ output "alb_external_ip_address" {
 Целевая группа:
 
 ![](screenshots/2024-07-22_132105_console.yandex.cloud.png)
+
+Далее в файле inventory.ini прописываем полученные адреса:
+
+Файл inventory.ini
+
+```YAML
+# This is the default ansible 'hosts' file.
+
+[all:vars]
+bastion_host=51.250.92.141
+zabbix_server_ip=89.169.139.51
+elasticsearch_host=elastic.ru-central1.internal
+kibana_host=kibana.ru-central1.internal
+zabbix_server=zabbix.ru-central1.internal
+ssh_common_args='-o ProxyCommand="ssh -i /home/s_yaremko/.ssh/bastion -W %h:%p bastion@{{ bastion_host }}"'
+user=insommnia
+private_key_file=/home/s_yaremko/.ssh/id_ed25519
+pkg_filebeat="filebeat-8.14.3-amd64.deb"
+pkg_elastic="elasticsearch-8.14.3-amd64.deb"
+pkg_kibana="kibana-8.14.3-amd64.deb"
+pkg_zabbix="zabbix-release_7.0-2+ubuntu22.04_all.deb"
+
+[kibana]
+kibana.ru-central1.internal
+
+[kibana:vars]
+ansible_ssh_common_args={{ ssh_common_args }}
+ansible_ssh_user={{ user }}
+ansible_ssh_private_key_file={{ private_key_file }}
+pkg_name={{ pkg_kibana }}
+
+[elasticsearch]
+elastic.ru-central1.internal
+
+[elasticsearch:vars]
+ansible_ssh_common_args={{ ssh_common_args }}
+ansible_ssh_user={{ user }}
+ansible_ssh_private_key_file={{ private_key_file }}
+pkg_name={{ pkg_elastic }}
+
+
+[internal_servers]
+webserver1.ru-central1.internal
+webserver2.ru-central1.internal
+
+[internal_servers:vars]
+ansible_ssh_common_args={{ ssh_common_args }}
+ansible_ssh_user={{ user }}
+ansible_ssh_private_key_file={{ private_key_file }}
+pkg_name={{ pkg_filebeat }}
+
+[zabbix_server]
+zabbix.ru-central1.internal
+
+[zabbix_server:vars]
+ansible_ssh_common_args={{ ssh_common_args }}
+ansible_ssh_user={{ user }}
+ansible_ssh_private_key_file={{ private_key_file }}
+pkg_name={{ pkg_zabbix }}
+listen_port=80
+server_name={{ zabbix_server_ip }}
+```
