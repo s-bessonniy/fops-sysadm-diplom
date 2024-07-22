@@ -935,7 +935,7 @@ http.host: 0.0.0.0
 
 Файл kibana.yml.j2
 
-```
+```yml.j2
 # For more configuration options see the configuration guide for Kibana in
 # https://www.elastic.co/guide/index.html
 
@@ -1802,4 +1802,7 @@ host_key_checking=False
 ;skip=
 ```
 
-И с криками `ansible-playbook elk_conf.yml` начинаем
+И с криками `ansible-playbook elk_conf.yml`, устанавливаем и настраивает елку икибану тоже:
+
+![]()
+
