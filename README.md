@@ -665,7 +665,7 @@ output "alb_external_ip_address" {
 
 Файл inventory.ini
 
-```YAML
+```yml
 # This is the default ansible 'hosts' file.
 
 [all:vars]
