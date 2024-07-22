@@ -3345,3 +3345,8 @@ StatsAllowedIP=127.0.0.1
 # Default: 
 # NodeAddress=localhost:10051
 ```
+
+В результате:
+
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_15_41_56.png)
+
