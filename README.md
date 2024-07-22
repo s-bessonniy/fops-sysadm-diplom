@@ -104,7 +104,7 @@ Cоздайте ВМ, разверните на ней Elasticsearch. Устан
 
 Для начала создаем файл main.tf для terraform для создания инфроструктуры в Yandex Cloud:
 
-main.tf
+Файл main.tf:
 
 ```HCL
 # -----Create infrostructure-----
@@ -596,3 +596,9 @@ output "alb_external_ip_address" {
   value = yandex_alb_load_balancer.insommnia-lb.listener.0.endpoint.0.address.0.external_ipv4_address[0].address
 }
 ```
+
+После чего перехожу в папку с проектом:
+`cd devops/vm_up`
+И запускаю последовательно команды:
+`terraform plan`
+`terraform apply`
