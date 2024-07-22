@@ -3361,3 +3361,116 @@ StatsAllowedIP=127.0.0.1
 Дашборт:
 
 ![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_16_32_53.png)
+
+Поступление логов на сервер кибаны:
+
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_16_57_20.png)
+
+Работа вебсайта:
+
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_16_58_20.png)
+
+И после всего, что было, бекапнем всю эту суету.
+
+Файл main.tf:
+
+```HCL
+# -----BackUp-----
+
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
+provider "yandex" {
+  token     = var.token
+  cloud_id  = var.cloud_id
+  folder_id = var.folder_id
+}
+
+#webserver1 disk_id
+data "yandex_compute_instance" "webserver1" {
+  name = "webserver1"
+} 
+
+output "webserver1_disk_id" {
+  value = "${data.yandex_compute_instance.webserver1.boot_disk[0].disk_id}"
+}
+
+#webserver2 disk_id
+data "yandex_compute_instance" "webserver2" {
+  name = "webserver2"
+} 
+
+output "webserver2_disk_id" {
+  value = "${data.yandex_compute_instance.webserver2.boot_disk[0].disk_id}"
+}
+
+#bastion disk_id
+data "yandex_compute_instance" "bastion" {
+  name = "bastion"
+}
+
+output "bastion_disk_id" {
+  value = "${data.yandex_compute_instance.bastion.boot_disk[0].disk_id}"
+}
+
+#elasticsearch disk_id
+data "yandex_compute_instance" "elastic" {
+  name = "elastic"
+}
+
+output "elastic_disk_id" {
+  value = "${data.yandex_compute_instance.elastic.boot_disk[0].disk_id}"
+}
+
+#kibana disk_id
+data "yandex_compute_instance" "kibana" {
+  name = "kibana"
+}
+
+output "kibana_disk_id" {
+  value = "${data.yandex_compute_instance.kibana.boot_disk[0].disk_id}"
+}
+
+#zabbix_server disk_id
+data "yandex_compute_instance" "zabbix" {
+  name = "zabbix"
+}  
+
+output "zabbix_disk_id" {
+  value = "${data.yandex_compute_instance.zabbix.boot_disk[0].disk_id}"
+}
+
+resource "yandex_compute_snapshot_schedule" "insommniabackup" {
+  name           = "insommniabackup"
+
+  schedule_policy {
+  expression = "0 0 * * *"
+  }
+
+  snapshot_count = 7
+  retention_period = "24h"
+
+    
+  disk_ids = [
+    data.yandex_compute_instance.webserver1.boot_disk[0].disk_id, 
+    data.yandex_compute_instance.webserver2.boot_disk[0].disk_id,
+    data.yandex_compute_instance.bastion.boot_disk[0].disk_id,
+    data.yandex_compute_instance.elastic.boot_disk[0].disk_id,
+    data.yandex_compute_instance.kibana.boot_disk[0].disk_id,
+    data.yandex_compute_instance.zabbix.boot_disk[0].disk_id
+    ]
+}
+```
+
+По итогу:
+
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_17_14_35.png)
+
+![](screenshots/2024-07-22_171542_console.yandex.cloud.png)
+
+Вроде все...
