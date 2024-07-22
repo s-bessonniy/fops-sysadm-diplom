@@ -100,7 +100,7 @@ Cоздайте ВМ, разверните на ней Elasticsearch. Устан
 
 Состояние Облака до начала проекта:
 
-![](screenshots/Opera Снимок_2024-07-22_123037_console.yandex.cloud.png)
+![](screenshots/22_123037_console.yandex.cloud.png)
 
 Для начала создаем файл main.tf для terraform для создания инфроструктуры в Yandex Cloud:
 
