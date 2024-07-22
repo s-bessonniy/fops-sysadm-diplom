@@ -606,3 +606,41 @@ output "alb_external_ip_address" {
 ```terraform plan```
 
 ```terraform apply```
+
+В результате выполнения команды получаем следующее:
+
+Вывод терминала:
+
+![](screenshots/VirtualBox_Ubuntu-50Gb_22_07_2024_12_50_17.png)
+
+Состояние облака:
+
+![](screenshots/2024-07-22_125343_console.yandex.cloud.png)
+
+Виртуальные машины:
+
+![](screenshots/2024-07-22_125414_console.yandex.cloud.png)
+
+Диски:
+
+![](screenshots/2024-07-22_125500_console.yandex.cloud.png)
+
+Сеть:
+
+![](screenshots/2024-07-22_125539_console.yandex.cloud.png)
+
+Подсеть:
+
+![](screenshots/2024-07-22_125613_console.yandex.cloud.png)
+
+Внешние IP-адреса:
+
+![](screenshots/2024-07-22_130250_console.yandex.cloud.png)
+
+Таблица маршрутизации:
+
+![](screenshots/2024-07-22_130347_console.yandex.cloud.png)
+
+Группа безопасности:
+
+![](screenshots/2024-07-22_130424_console.yandex.cloud.png)
